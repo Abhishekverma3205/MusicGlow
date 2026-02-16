@@ -1,0 +1,5 @@
+werkzeug
+Flask
+authlib
+gunicorn
+smtplib

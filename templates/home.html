@@ -1,0 +1,329 @@
+<h2>
+{% if page_type == "home" %}
+All Songs
+{% elif page_type == "recent" %}
+Recently Played
+{% elif page_type == "likes" %}
+Liked Songs
+{% elif page_type == "favorites" %}
+Favorite Songs
+{% endif %}
+</h2>
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>music-glow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      display: flex;
+      background: #121212;
+      color: white;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #000;
+      padding: 20px;
+      position: fixed;
+    }
+
+    .sidebar h2 {
+      color: #1db954;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #b3b3b3;
+      text-decoration: none;
+      margin: 15px 0;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      color: white;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 220px;
+      width: 100%;
+      padding: 30px;
+      padding-bottom: 120px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search input {
+      padding: 8px 15px;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+    }
+
+    .user {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .admin {
+      background: gold;
+      color: black;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+
+    /* UPLOAD BOX */
+    .upload-box {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      background: #181818;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .upload-box h3 {
+      margin-bottom: 10px;
+    }
+
+    .upload-box input {
+      margin-top: 10px;
+    }
+
+    .upload-box button {
+      background: #1db954;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 20px;
+      color: white;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .upload-box button:hover {
+      background: white;
+      color: #1db954;
+    }
+
+    /* SONG GRID */
+    .songs {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .song-card {
+      background: #181818;
+      padding: 20px;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .song-card:hover {
+      background: #282828;
+      transform: scale(1.05);
+    }
+
+    .song-card h4 {
+      margin-bottom: 10px;
+    }
+
+    .song-card button {
+      background: #1db954;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 20px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .song-card button:hover {
+      background: white;
+      color: #1db954;
+    }
+
+    .actions {
+      margin-top: 10px;
+    }
+
+    .actions a {
+      margin-right: 10px;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    /* PLAYER */
+    .player {
+      position: fixed;
+      bottom: 0;
+      left: 220px;
+      width: calc(100% - 220px);
+      background: #181818;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .player audio {
+      width: 400px;
+    }
+
+    .logout {
+      background: #1db954;
+      padding: 5px 15px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: white;
+    }
+
+    .logout:hover {
+      background: white;
+      color: #1db954;
+    }
+
+    .google-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 25px;
+    margin-top: 15px;
+    background: #db4437;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    padding: 3px;
+}
+
+.google-btn:hover {
+    background: #c1351d;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.google-btn:active {
+    transform: scale(0.97);
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>🎵 Music-Glow</h2>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('view_favorites') }}">❤️ Favorites</a>
+    <a href="{{ url_for('view_likes') }}">👍 Likes</a>
+    <a href="{{ url_for('view_recent') }}">🕒 Recent</a>
+  </div>
+
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="topbar">
+      <div class="search">
+        <input type="text" placeholder="What do you want to play?">
+      </div>
+
+      <div class="user">
+        <span>{{ user }}</span>
+
+        {% if user == "admin" %}
+        <span class="admin">ADMIN</span>
+        {% endif %}
+
+        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+      </div>
+    </div>
+
+    <!-- ADMIN UPLOAD SECTION -->
+    {% if user == "admin" %}
+    <div class="upload-box">
+      <h3>Upload New Song</h3>
+      <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+      </form>
+    </div>
+    {% endif %}
+
+    <!-- SONGS -->
+    <div class="songs">
+      {% for song in songs %}
+      <div class="song-card">
+
+        <h4>{{ song[1] }}</h4>
+
+        <button onclick="playSong('{{ url_for('play', filename=song[1]) }}', '{{ song[1] }}', {{ song[0] }})">
+          ▶ Play
+        </button>
+
+        <div class="actions">
+          <a href="{{ url_for('favorite', song_id=song[0]) }}" onclick="event.stopPropagation()">❤️</a>
+          <a href="{{ url_for('like', song_id=song[0]) }}" onclick="event.stopPropagation()">👍</a>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+
+  <!-- GLOBAL PLAYER -->
+  <div class="player">
+    <div id="nowPlaying">No song selected</div>
+    <audio id="audioPlayer" controls></audio>
+  </div>
+
+  <script>
+    let audio = document.getElementById("audioPlayer");
+    let nowPlaying = document.getElementById("nowPlaying");
+
+    function playSong(url, name, id) {
+      audio.src = url;
+      audio.play();
+      nowPlaying.innerText = "Now Playing: " + name;
+
+      fetch("/recent/" + id);
+    }
+  </script>
+
+</body>
+
+</html>

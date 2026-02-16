@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Verify OTP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #121212, #1db95422);
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Floating Background Circles */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(29, 185, 84, 0.15);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        .circle:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 15%;
+        }
+
+        .circle:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* OTP Box */
+        .otp-box {
+            padding: 50px;
+            width: 350px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            box-shadow: 0 0 30px rgba(29, 185, 84, 0.3);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #1db954;
+        }
+
+        .otp-input {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .otp-input input {
+            width: 45px;
+            height: 55px;
+            text-align: center;
+            font-size: 22px;
+            border-radius: 10px;
+            border: 2px solid #1db954;
+            background: transparent;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .otp-input input:focus {
+            outline: none;
+            box-shadow: 0 0 15px #1db954;
+            transform: scale(1.1);
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px 30px;
+            background: #1db954;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: white;
+            color: #1db954;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #1db954;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="circle"></div>
+    <div class="circle"></div>
+
+    <div class="otp-box">
+        <h2>🔐 Verify OTP</h2>
+        <div class="subtitle">Enter the 6-digit code sent to your email</div>
+
+        <form method="POST">
+            <div class="otp-input">
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+            </div>
+
+            <input type="hidden" name="otp" id="fullOtp">
+
+            <button type="submit">Verify</button>
+        </form>
+    </div>
+
+    <script>
+        const inputs = document.querySelectorAll(".otp-input input");
+        const hiddenInput = document.getElementById("fullOtp");
+
+        inputs.forEach((input, index) => {
+            input.addEventListener("input", () => {
+                if (input.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+
+                let otp = "";
+                inputs.forEach(i => otp += i.value);
+                hiddenInput.value = otp;
+            });
+
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && index > 0 && !input.value) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
