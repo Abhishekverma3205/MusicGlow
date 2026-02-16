@@ -1,5 +1,4 @@
-werkzeug
 Flask
-authlib
 gunicorn
-smtplib
+authlib
+Werkzeug
