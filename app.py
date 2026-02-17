@@ -173,6 +173,21 @@ def register():
         session["temp_username"] = username
         session["temp_password"] = password
 
+def send_otp(email, otp):
+    try:
+        msg = MIMEText(f"Your OTP is: {otp}")
+        msg["Subject"] = "Music-Glow OTP"
+        msg["From"] = EMAIL_ADDRESS
+        msg["To"] = email
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            server.send_message(msg)
+
+    except Exception as e:
+        print("Email sending failed:", e)
+
+
         send_otp(email, otp)
         return render_template("verify_otp.html")
 
