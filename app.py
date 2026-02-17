@@ -12,7 +12,8 @@ app = Flask(__name__)
 
 # ================= PRODUCTION CONFIG =================
 
-app.secret_key = os.environ.get("SECRET_KEY")
+app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret-key")
+
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
