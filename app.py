@@ -173,7 +173,7 @@ def register():
         session["temp_username"] = username
         session["temp_password"] = password
 
-        send_otp(email, otp)
+        #send_otp(email, otp)
         return render_template("verify_otp.html")
 
     return render_template("register.html")
